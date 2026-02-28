@@ -1,1 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Human Activity Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Human Activity Recognition</h1>
 
+        <form method="POST" enctype="multipart/form-data">
+            <label>Upload CSV file with features:</label>
+            <input type="file" name="file" accept=".csv" required>
+            <button type="submit">Predict Activities</button>
+        </form><br>
+
+        {% if predictions %}
+            <div class="result">
+                <h2>Predicted Activities:</h2>
+                <ul>
+                {% for p in predictions %}
+                    <li>{{ p }}</li>
+                {% endfor %}
+                </ul>
+                <p>Results saved to <strong>predictions.csv</strong></p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
