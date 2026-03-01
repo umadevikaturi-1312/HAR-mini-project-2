@@ -49,12 +49,13 @@ def index():
         df["Predicted_Activity"] = predictions
         # Keep only the last 10 rows
         df_last10 = df.tail(10)
-        df_last10.to_csv("predictions.csv", index=False)
+        df_last10.to_csv("test.csv", index=False)
 
     return render_template("index.html", predictions=predictions)
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
     
