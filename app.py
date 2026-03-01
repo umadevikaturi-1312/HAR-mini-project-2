@@ -5,8 +5,8 @@ import pandas as pd
 app = Flask(__name__)
 
 # Load model & features
-model = joblib.load("model.pkl")
-features = joblib.load("features.pkl")
+model = joblib.load("models/model.pkl")
+features = joblib.load("models/features.pkl")
 
 # Print features
 print("Number of features:", len(features))
@@ -59,3 +59,4 @@ if __name__ == "__main__":
 
 
     
+
