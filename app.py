@@ -8,47 +8,51 @@ app = Flask(__name__)
 model = joblib.load("model.pkl")
 features = joblib.load("features.pkl")
 
+# Print features
+print("Number of features:", len(features))
+print(features[:10])  # first 10 feature names
+
 activity_labels = {
-    0: "Walking",
-    1: "Walking Upstairs",
-    2: "Walking Downstairs",
-    3: "Sitting",
-    4: "Standing",
-    5: "Laying"
+    1: "Walking",
+    2: "Walking Upstairs",
+    3: "Walking Downstairs",
+    4: "Sitting",
+    5: "Standing",
+    6: "Laying"
 }
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     predictions = None
     if request.method == "POST":
-        # Check if file part is present
         if "file" not in request.files:
             return "No file uploaded", 400
         file = request.files["file"]
         if file.filename == "":
             return "No file selected", 400
 
-        # Read uploaded CSV
-        df = pd.read_csv(file)
+        # Read uploaded CSV without headers
+        df = pd.read_csv(file, header=None)
 
-        # Keep only the features used for training
-        df_features = df[features]
+        # Make sure all feature columns exist
+        if len(features) != df.shape[1]:
+            for i in range(len(features) - df.shape[1]):
+                df[i + df.shape[1]] = 0
+
+        df.columns = features  # align column names with training features
 
         # Predict
-        preds = model.predict(df_features)
-        # Use predictions directly (they are already strings)
-        predictions = preds.tolist()
-        
-        # Add predictions to dataframe
+        preds = model.predict(df)
+        # Map numeric predictions to activity names
+        predictions = [activity_labels[p] for p in preds]
+
         df["Predicted_Activity"] = predictions
-
-        # Select 10 random rows
-        df_random10 = df.sample(n=10, random_state=42)  # random_state ensures reproducibility
-
-        # Save only these 10 rows to CSV
-        df_random10.to_csv("predictions.csv", index=False)
+        # Keep only the last 10 rows
+        df_last10 = df.tail(10)
+        df_last10.to_csv("predictions.csv", index=False)
 
     return render_template("index.html", predictions=predictions)
+
 if __name__ == "__main__":
     app.run(debug=True)
 
