@@ -34,12 +34,14 @@ def index():
         # Read uploaded CSV without headers
         df = pd.read_csv(file, header=None)
 
-        # Make sure all feature columns exist
-        if len(features) != df.shape[1]:
+      # If uploaded CSV has fewer columns than expected, add missing columns
+        if df.shape[1] < len(features):
             for i in range(len(features) - df.shape[1]):
-                df[i + df.shape[1]] = 0
-
-        df.columns = features  # align column names with training features
+                df[df.shape[1]] = 0
+        elif df.shape[1] > len(features):
+            df = df.iloc[:, :len(features)]  # trim extra columns
+        
+        df.columns = features  # now safe
 
         # Predict
         preds = model.predict(df)
@@ -59,4 +61,5 @@ if __name__ == "__main__":
 
 
     
+
 
