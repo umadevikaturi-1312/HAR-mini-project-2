@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
 # Load dataset without header
-data = pd.read_csv("data/har_dataset_combined.csv", header=None)
+data = pd.read_csv("data/har_dataset_combined.zip", header=None)
 
 # Save as zip (optional, reduces size for GitHub)
 data.to_csv("data/har_dataset_combined.zip", index=False, header=False, compression='zip')
@@ -37,9 +37,10 @@ print("Accuracy:", accuracy_score(y_test, pred))
 
 # Save
 joblib.dump(model, "models/model.pkl")
-joblib.dump(X.columns.tolist(), "models/features.pkl"")
+joblib.dump(X.columns.tolist(), "models/features.pkl")
 
 
 print("Training Completed")
+
 
 
