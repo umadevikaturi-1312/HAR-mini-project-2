@@ -36,9 +36,10 @@ pred = model.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, pred))
 
 # Save
-joblib.dump(model, "model.pkl")
-joblib.dump(X.columns.tolist(), "features.pkl")
+joblib.dump(model, "models/model.pkl")
+joblib.dump(X.columns.tolist(), "models/features.pkl"")
 
 
 print("Training Completed")
+
 
